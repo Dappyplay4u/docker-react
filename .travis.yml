@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t dappyplay4u/docker-react -f dockerfile.dev
+
+script: 
+  - docker run dappyplay4u/docker-react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-react"
+  env: "docker-react-env"
+  bucket_name: "elasticbeanstalk-us-east-1-bucketnumber"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
